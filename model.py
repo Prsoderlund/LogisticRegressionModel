@@ -36,19 +36,23 @@ data_df = data_df.where(~condition, rounded_mean_value)
 # Add the Sample column back
 data_df['Sample'] = temp_drop_column
 
-#Split the data 
+#Split the data
 x = data_df.drop(columns=['Sample'])
 y = labels_df['Label']
 
+#Choose test/ train split (in this case the test size is 25%)
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.25, random_state = 50)
 
+#use scaling to improve performance by assuring no single feature takes of algorithm
 scaler = StandardScaler()
 x_train_scaled = scaler.fit_transform(x_train)
 x_test_scaled = scaler.transform(x_test)
 
+#start Logistic regression
 model = LogisticRegression()
 model.fit(x_train_scaled, y_train)
 
+# Predict and evaluate
 y_prediction = model.predict(x_test_scaled)
 
 print(classification_report(y_test, y_prediction))
